@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:worldopoly/src/constants/theme.dart';
 
-const screensTabItem = <NavigationDestination>[
+List<NavigationDestination> screensTabItem = const [
   NavigationDestination(
-    icon: Icon(Icons.apartment, color: Color.fromRGBO(171, 169, 176, 1)),
-    selectedIcon: Icon(Icons.apartment),
+    selectedIcon: Icon(Icons.apartment, color: WorldopolyColor.shade3),
+    icon: Icon(Icons.apartment, color: WorldopolyColor.shade4),
     label: 'Map',
   ),
   NavigationDestination(
-    icon: Icon(Icons.map, color: Color.fromRGBO(171, 169, 176, 1)),
-    selectedIcon: Icon(Icons.map),
+    selectedIcon: Icon(Icons.map, color: WorldopolyColor.shade3),
+    icon: Icon(Icons.map, color: WorldopolyColor.shade4),
     label: 'Map',
   ),
   NavigationDestination(
-    icon: Icon(Icons.settings, color: Color.fromRGBO(171, 169, 176, 1)),
-    selectedIcon: Icon(Icons.settings),
+    selectedIcon: Icon(Icons.settings, color: WorldopolyColor.shade3),
+    icon: Icon(Icons.settings, color: WorldopolyColor.shade4),
     label: 'Settings',
   ),
 ]; 
@@ -33,8 +34,8 @@ class BottomNavBar extends StatelessWidget  {
       destinations: screensTabItem,
       selectedIndex: selectedIndex,
       onDestinationSelected: onTap,
-      backgroundColor: Theme.of(context).primaryColor,
-      indicatorColor: Theme.of(context).secondaryHeaderColor,
+      backgroundColor: WorldopolyColor.primary,
+      indicatorColor: WorldopolyColor.shade1,
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       height: 50,
     );

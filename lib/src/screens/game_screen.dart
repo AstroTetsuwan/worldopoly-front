@@ -5,6 +5,7 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:worldopoly/src/api/map_api.dart';
+import 'package:worldopoly/src/widgets/game/game_header.dart';
 import 'package:worldopoly/src/widgets/game/map/map.dart';
 import 'package:worldopoly/src/model/osm_street.dart';
 import 'package:worldopoly/src/widgets/game/map/street_line_layer.dart';
@@ -80,21 +81,26 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WorldopolyMap(
-        mapController: _animatedMapController.mapController,
-        mapOptions: MapOptions(
-          initialCenter: parisCoords,
-          initialZoom: zoom,
-          onTap: onTapMap,
-        ), 
+      body: Stack(
         children: [
-          StreetLineLayer(
-            points: selectedStreetPoints, 
-            color: Colors.red, 
-            width: 4.0
-          )
+          WorldopolyMap(
+            mapController: _animatedMapController.mapController,
+            mapOptions: MapOptions(
+              initialCenter: parisCoords,
+              initialZoom: zoom,
+              onTap: onTapMap,
+            ), 
+            children: [
+              StreetLineLayer(
+                points: selectedStreetPoints, 
+                color: Colors.red, 
+                width: 4.0
+              )
+            ]
+          ),          
+          GameHeader()
         ]
-      ),
+      )
     );
   }
 }
