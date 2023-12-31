@@ -5,7 +5,7 @@ List<NavigationDestination> screensTabItem = const [
   NavigationDestination(
     selectedIcon: Icon(Icons.apartment, color: WorldopolyColor.shade3),
     icon: Icon(Icons.apartment, color: WorldopolyColor.shade4),
-    label: 'Map',
+    label: 'Owned Streets',
   ),
   NavigationDestination(
     selectedIcon: Icon(Icons.map, color: WorldopolyColor.shade3),

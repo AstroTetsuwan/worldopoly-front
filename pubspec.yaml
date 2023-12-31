@@ -3,12 +3,16 @@ description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
 
+scripts:
+  dev: "flutter run lib/main.dart --dart-define=FLAVOR=dev"
+
 environment:
   sdk: '>=3.2.3 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_map: ^6.1.0
   flutter_map_animations: ^0.5.3
   flutter_map_cancellable_tile_provider: ^2.0.0
@@ -25,3 +29,4 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - .env

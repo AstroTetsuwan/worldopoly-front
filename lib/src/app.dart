@@ -22,9 +22,7 @@ class _AppState extends State<App> {
   ];
 
   void onNavigationBarItemTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() => _selectedIndex = index);
   }
 
   @override

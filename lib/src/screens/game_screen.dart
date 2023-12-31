@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:worldopoly/src/api/api.dart';
 
-import 'package:worldopoly/src/api/map_api.dart';
+import 'package:worldopoly/src/api/population_api.dart';
+import 'package:worldopoly/src/constants/config.dart';
 import 'package:worldopoly/src/widgets/game/game_header.dart';
 import 'package:worldopoly/src/widgets/game/map/map.dart';
 import 'package:worldopoly/src/model/osm_street.dart';
@@ -53,30 +55,52 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       zoom = _animatedMapController.mapController.camera.zoom;
     });
 
-    OsmStreet? street = await getStreetFromCoords(
-      lat: point.latitude, 
-      long: point.longitude
+    Map<String, dynamic>? json = await WorldopolyAPI.get(
+      path: "streets/from-coords",
+      params: { "lat": point.latitude, "lng": point.longitude }
     );
+    
+    if (json == null) {
+      return;
+    }
+
+    OsmStreet? street = OsmStreet.fromJson(json);
 
     if (street != null) {
-      List<List<LatLng>> points = await getOsmStreetShape(street: street);
-
+     
       setState(() {
         selectedStreet = street;
-        selectedStreetPoints = points;
+        selectedStreetPoints = street.shape;
       });
-      
-      // TODO: FIND A WAY TO ADJUST THE ZOOM TO THE LENGTH OF THE STREET
       centerOnTap(point);
+
+      // await getPopulationForCity(name: street.city, countryCode: street.countryCode);
+
+
+      // Adjust zoom to fit bounds of the selected street
+      
+      // LatLngBounds bounds = LatLngBounds(
+      //   LatLng(street.boundingBox[0], street.boundingBox[2]), 
+      //   LatLng(street.boundingBox[1], street.boundingBox[3])  
+      // );
+      // TODO boundingbox here is just a part of the street, from the shape, get the real boundingbox
+      
+      // adjustZoomToFitBounds(bounds);
 
       _showStreetDetailsModal();
     }
   }
 
+  Future<void> adjustZoomToFitBounds (LatLngBounds bounds) async => _animatedMapController.animatedFitCamera(
+    cameraFit: CameraFit.insideBounds(bounds: bounds)
+  );
+
   void centerOnTap (LatLng point) => _animatedMapController.animateTo(
     dest: point,
     rotation: 0
   );
+
+  // TODO https://api-ninjas.com/api/city to get city population
 
   @override
   Widget build(BuildContext context) {

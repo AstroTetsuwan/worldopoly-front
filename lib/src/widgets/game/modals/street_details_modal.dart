@@ -2,36 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:worldopoly/src/model/osm_street.dart';
+import 'package:worldopoly/src/widgets/game/modals/worldopoly_bottom_modal.dart';
 
-class StreetDetailsModalWrapper extends StatelessWidget {
-  final List<Widget> children;
-  
-  const StreetDetailsModalWrapper({
-    super.key,
-    required this.children
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10), 
-          topRight: Radius.circular(10)
-        ),
-        color: Theme.of(context).primaryColorLight
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: children,
-        ),
-      ),
-    );
-  }
-}
 
 class StreetDetailsModal extends StatelessWidget {
   final OsmStreet? street;
@@ -43,9 +15,10 @@ class StreetDetailsModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreetDetailsModalWrapper(
+    return WorldopolyBottomModal(
+      backgroundImage: 'assets/images/colored-street.jpg',
       children: <Widget>[
-        Text(street?.name ?? 'Street not found'),
+        Text(street?.road ?? 'Street not found', style: const TextStyle(color: Colors.white)),
         ElevatedButton(
           child: const Text('Close BottomSheet'),
           onPressed: () => Navigator.pop(context),
