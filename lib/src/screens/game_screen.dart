@@ -5,11 +5,9 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:worldopoly/src/api/api.dart';
 
-import 'package:worldopoly/src/api/population_api.dart';
-import 'package:worldopoly/src/constants/config.dart';
 import 'package:worldopoly/src/widgets/game/game_header.dart';
 import 'package:worldopoly/src/widgets/game/map/map.dart';
-import 'package:worldopoly/src/model/osm_street.dart';
+import 'package:worldopoly/src/model/street.dart';
 import 'package:worldopoly/src/widgets/game/map/street_line_layer.dart';
 import 'package:worldopoly/src/widgets/game/modals/street_details_modal.dart';
 
@@ -30,7 +28,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   double zoom = 10;
   LatLng? lastTapPosition;
   List<List<LatLng>> selectedStreetPoints = [];
-  OsmStreet? selectedStreet;
+  Street? selectedStreet;
 
   void onCloseStreetDetailsModal() {
     setState(() {
@@ -55,45 +53,44 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       zoom = _animatedMapController.mapController.camera.zoom;
     });
 
-    Map<String, dynamic>? json = await WorldopolyAPI.get(
-      path: "streets/from-coords",
-      params: { "lat": point.latitude, "lng": point.longitude }
-    );
-    
-    if (json == null) {
-      return;
-    }
+    try {
+      Map<String, dynamic>? json = await WorldopolyAPI.get(
+        path: "streets/from-coords",
+        params: { "lat": point.latitude, "lng": point.longitude }
+      );
+      
+      if (json == null) {
+        return;
+      }
 
-    OsmStreet? street = OsmStreet.fromJson(json);
+      Street street = Street.fromJson(json);
 
-    if (street != null) {
-     
       setState(() {
         selectedStreet = street;
         selectedStreetPoints = street.shape;
       });
       centerOnTap(point);
 
-      // await getPopulationForCity(name: street.city, countryCode: street.countryCode);
-
-
       // Adjust zoom to fit bounds of the selected street
-      
-      // LatLngBounds bounds = LatLngBounds(
-      //   LatLng(street.boundingBox[0], street.boundingBox[2]), 
-      //   LatLng(street.boundingBox[1], street.boundingBox[3])  
-      // );
       // TODO boundingbox here is just a part of the street, from the shape, get the real boundingbox
-      
-      // adjustZoomToFitBounds(bounds);
+      // adjustZoomToFitBounds(street.boundingBox);
 
       _showStreetDetailsModal();
+    } catch (e) {
+      print(e);
     }
   }
 
-  Future<void> adjustZoomToFitBounds (LatLngBounds bounds) async => _animatedMapController.animatedFitCamera(
-    cameraFit: CameraFit.insideBounds(bounds: bounds)
-  );
+  Future<void> adjustZoomToFitBounds (List<double> boundingBox) async {
+    await _animatedMapController.animatedFitCamera(
+      cameraFit: CameraFit.insideBounds(
+        bounds: LatLngBounds(
+          LatLng(boundingBox[0], boundingBox[2]), 
+          LatLng(boundingBox[1], boundingBox[3])  
+        )
+      )
+    );
+  }
 
   void centerOnTap (LatLng point) => _animatedMapController.animateTo(
     dest: point,
@@ -122,7 +119,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               )
             ]
           ),          
-          GameHeader()
+          const GameHeader()
         ]
       )
     );

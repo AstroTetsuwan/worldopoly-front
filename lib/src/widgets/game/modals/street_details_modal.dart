@@ -1,12 +1,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:worldopoly/src/model/osm_street.dart';
+import 'package:worldopoly/src/model/street.dart';
 import 'package:worldopoly/src/widgets/game/modals/worldopoly_bottom_modal.dart';
 
 
 class StreetDetailsModal extends StatelessWidget {
-  final OsmStreet? street;
+  final Street? street;
   
   const StreetDetailsModal({
     super.key,
